@@ -289,7 +289,7 @@ const ProjectDetail = () => {
               >
                 <video
                   ref={videoRef}
-                  className="w-full h-full rounded-lg object-cover"
+                  className="w-full h-full rounded-lg object-contain bg-black"
                   onPlay={handleVideoPlay}
                   onPause={handleVideoPause}
                   onTimeUpdate={handleTimeUpdate}
@@ -301,9 +301,12 @@ const ProjectDetail = () => {
                 </video>
                 
                 {/* Custom Play/Pause Button Overlay */}
-                <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
-                  showControls ? 'opacity-100' : 'opacity-0'
-                }`}>
+                <div 
+                  className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
+                    showControls ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <motion.button
                     onClick={togglePlayPause}
                     className="bg-black/50 hover:bg-black/70 rounded-full p-4 transition-all duration-300 backdrop-blur-sm"
@@ -319,9 +322,12 @@ const ProjectDetail = () => {
                 </div>
 
                 {/* Simple Controls Overlay */}
-                <div className={`absolute bottom-0 left-0 right-0 transition-opacity duration-300 ${
-                  showControls ? 'opacity-100' : 'opacity-0'
-                }`}>
+                <div 
+                  className={`absolute bottom-0 left-0 right-0 transition-opacity duration-300 ${
+                    showControls ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <div className="bg-gradient-to-t from-black/80 to-transparent p-4">
                     <div className="flex items-center space-x-4">
                       {/* Play/Pause Button */}
@@ -342,19 +348,23 @@ const ProjectDetail = () => {
                       </span>
                       
                       {/* Progress Bar */}
-                      <div className="flex-1 relative">
+                      <div className="flex-1 relative min-w-0">
                         <div 
-                          className="w-full h-1 bg-white/30 cursor-pointer group"
+                          className="w-full h-2 bg-white/30 cursor-pointer rounded relative"
                           onMouseDown={handleProgressMouseDown}
                           onMouseMove={handleProgressMouseMove}
                           onMouseUp={handleProgressMouseUp}
                           onMouseLeave={handleProgressMouseUp}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleProgressClick(e);
+                          }}
                         >
-                          {/* Progress fill */}
+                          {/* Progress fill - pointer-events-none so clicks hit the track */}
                           <div 
-                            className="absolute left-0 top-0 h-full bg-white transition-all duration-100"
-                            style={{ width: `${(currentTime / duration) * 100 || 0}%` }}
-                          ></div>
+                            className="absolute left-0 top-0 h-full bg-white rounded transition-all duration-100 pointer-events-none"
+                            style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+                          />
                         </div>
                       </div>
                     </div>
